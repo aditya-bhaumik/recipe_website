@@ -3,30 +3,16 @@ name: Greet New Issue
 on:
   issues:
     types: [opened]
+  pull_request_target:
+    types: [opened]
 
 jobs:
-  greet:
+  welcome:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Add a comment to the new issue
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const issueNumber = context.payload.issue.number;
-          const commentBody = `
-          👋 Hello @${context.payload.issue.user.login}! Thanks for opening this issue. We appreciate your contribution.
-          
-          Please provide as much detail as possible to help us resolve it quickly. If you have any screenshots or logs, feel free to add them here.
-          
-          Our team will review this issue and get back to you soon. In the meantime, check out our [documentation](link_to_documentation) for more information.
-          
-          Thanks again for your support!
-          `;
-          await github.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: issueNumber,
-            body: commentBody
-          });
+      - uses: actions/checkout@v1
+      - uses: EddieHubCommunity/gh-action-community/src/welcome@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: 'Congratulations, @${{ github.actor }}! 🎉 Thank you for creating your issue. Your contribution is greatly appreciated and we look forward to working with you to resolve the issue. Keep up the great work! Should you have any queries or require guidance, do not hesitate to ask.'
+          pr-message: 'Great job, @${{ github.actor }}! 🎉 Thank you for submitting your pull request. Our dedicated team will review it diligently.Your contribution is valuable and we appreciate your efforts to improve our project.'
